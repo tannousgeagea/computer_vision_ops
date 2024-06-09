@@ -13,7 +13,7 @@ from utils.connection import create_scp_client
 from utils.date_utils import days_after_given_date, datetimefday
 from utils.common import get_image_path
 from utils.config import edge_box, src, default_query
-from data_reader.utils.utils import register_one_image
+from data_reader.utils.common import register_one_image
 
 DATE_FORMAT = '%Y-%m-%d'
 server_ip = "10.10.0.29" #os.environ.get('SSH_HOST')

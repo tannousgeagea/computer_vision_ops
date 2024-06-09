@@ -5,7 +5,7 @@ from glob import glob
 from tqdm import tqdm
 from datetime import date
 from utils.config import edge_box, src
-from data_reader.utils.utils import register_one_image
+from data_reader.utils.common import register_one_image
 
 def serve():
     files_path = glob(src + "/images/*.jpg")

@@ -14,7 +14,7 @@ from utils.connection import list_files_in_directory
 from utils.date_utils import days_after_given_date
 from utils.config import Image, EdgeBoxInfo
 from utils.config import edge_box, src
-from data_reader.utils.utils import register_one_image
+from data_reader.utils.common import register_one_image
 
 DATE_FORMAT = '%m-%d-%Y'
 HOME = os.environ.get('HOME')
