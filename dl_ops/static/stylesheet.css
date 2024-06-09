@@ -1,0 +1,160 @@
+/* styles.css */
+body {
+    background-color: #333333;  /* Dark grey background */
+    color: #ffffff;             /* Ensures text is easily readable on the dark background */
+}
+
+.container {
+    background-color: #424242e6;  /* Slightly lighter grey for the container for some contrast */
+    padding: 20px;              /* Optional: adds padding around the content inside the container */
+    border-radius: 8px;         /* Optional: rounds the corners of the container */
+    width: 100%;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.logo {
+    height: 50px;
+    margin-left: 20px;
+    border-radius: 6px;
+}
+
+h1 {
+    margin: 0;
+}
+
+.separator {
+    height: 5px;
+    background-color: #333333; /* Solid color example */
+    background-image: linear-gradient(to right, #ccc, #333333, #ccc); /* Gradient example */
+    margin-top: 15px;
+    margin-bottom: 50px;
+}
+
+.filters label {
+    font-weight: bold;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.filters select {
+    padding: 10px;
+    margin-right: 10px;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #ccc;
+    display: flexbox;
+}
+
+.card-img-container {
+    transition: transform 0.5s ease; /* Smooth transition for scaling */
+    display: inline-block; /* Ensures that the container can scale */
+    overflow: visible; /* Allow elements to overflow outside of the container */
+    filter: brightness(40%); /* Decreases brightness to 50% of the original */
+}
+
+.card-img-container:hover {
+    transform: scale(1.05); /* Scale up the container */
+    z-index: 100; /* Make sure the scaled container is above other content */
+    filter: brightness(80%); /* Decreases brightness to 50% of the original */
+}
+
+
+.card-body {
+    background-color: #484848;  /* Lighter grey than the container for visibility */
+    color: #FFFFFF;             /* White text color for better readability */
+    padding: 10px;              /* Padding for spacing inside the card */
+    border-radius: 2px;         /* Optional: rounded corners for aesthetics */
+}
+
+.card {
+    background-color: #383838;  /* Dark grey for the card itself, slightly darker than the card-body */
+    margin-bottom: 15px;        /* Space between cards */
+    border-radius: 6px;         /* Rounded corners for the card */
+}
+
+.card-title {
+    color: #E0E0E0;             /* A lighter shade of white for the title for emphasis */
+}
+
+/* Base styles for bounding boxes, with transition for smooth hover effects */
+.bounding-box {
+    position: absolute;
+    border: 3px solid;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    cursor: pointer; /* Indicates that the box is clickable */
+}
+
+/* Dynamic color coding based on data-label attribute */
+.bounding-box[data-label="non-problematic"] { border-color: #47ff47; }
+.bounding-box[data-label="problematic-low"] { border-color: #f0ff1e; }
+.bounding-box[data-label="problematic-mittel"] { border-color: #d5872e; }
+
+/* Hover effects */
+.bounding-box:hover {
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+/* Tooltip styling */
+.tooltip {
+    position: absolute;
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    display: none;
+    opacity: 0.7;
+}
+
+/* Show tooltip on hover */
+.bounding-box:hover .tooltip {
+    display: block;
+}
+
+/* General styling for labels inside bounding boxes, if needed */
+.bounding-box .label-above {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    color: black;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 0.75em;
+    white-space: nowrap;
+    margin-bottom: 5px;
+}
+
+.label-above {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    color: black;
+    padding: 2px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.bounding-box:hover .label-above {
+    display: block;
+}
+
+
+.delete-button {
+    margin-top: 10px;
+    width: 50%;  /* Make the button wide enough to fit the card */
+}

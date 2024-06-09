@@ -1,0 +1,192 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVision MLOps</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="header-container">
+            <h1>CVision MLOps</h1>
+            <img src="{% static 'wa-logo-Photoroom.png-Photoroom.png' %}" alt="Company Logo" class="logo"> <!-- Update src to your logo path -->
+        </div>
+        <div class="separator"></div>  <!-- Div used as a separator -->
+
+        <!-- Filter dropdowns -->
+        <div class="filters">
+            <label for="dateFilter">Filter by Date</label>
+            <select id="dateFilter" onchange="applyFilters()">
+                <option value="">Select Date</option>
+                <!-- Dynamically filled with JavaScript -->
+            </select>
+            <label for="classFilter">Filter by Class</label>
+            <select id="classFilter" onchange="applyFilters()">
+                <option value="">Select Class</option>
+                <!-- Options like: <option value="Person">Person</option> -->
+            </select>
+        </div>
+        
+        <div id="images" class="row"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/images/train/')
+            .then(response => response.json())
+            .then(data => {
+                const imagesContainer = document.getElementById('images');
+                const dateFilter = document.getElementById('dateFilter');
+                const classFilter = document.getElementById('classFilter');
+                const dates = new Set();
+                const classes = new Set();
+
+                data.forEach(img => {
+                    dates.add(img.date);
+                    const classList = [];
+                    img.annotations.forEach(ann => {
+                        classes.add(ann.label);
+                        classList.push(ann.label);
+                    });
+                    const col = document.createElement('div');
+                    col.className = 'col-md-6';
+                    col.dataset.date = img.date
+                    col.dataset.classes = JSON.stringify(classList)     
+                    col.innerHTML = createHTML(img)
+ 
+
+                    imagesContainer.appendChild(col);
+
+                    const cardBody = col.querySelector('.card-body');
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Delete Image';
+                    deleteBtn.className = 'btn btn-danger delete-button';
+                    deleteBtn.onclick = function() { deleteImage(col, img.id); };
+                    cardBody.appendChild(deleteBtn);
+                });
+
+                dates.forEach(date => dateFilter.options.add(new Option(date, date)));
+                classes.forEach(cls => classFilter.options.add(new Option(cls, cls)));
+            })
+            .catch(error => console.error('Error:', error));
+
+        });
+
+
+    function createHTML(img) {
+        let innerHTML = `
+            <div class="card" style="width: 100%;">
+                <div class="card-img-container" style="position: relative;">
+                    <img src="${img.image_url}" loading="lazy" class="card-img-top" alt="Image" onload="scaleAndPositionBoxes(this, ${JSON.stringify(img.annotations).replace(/"/g, '&quot;')})">
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">${img.image_url}</h6>
+                </div>
+            </div>
+        `;
+    
+        return innerHTML
+    }
+
+    // Helper function to scale and position bounding boxes
+    function scaleAndPositionBoxes(imgElement, annotations) {
+        const container = imgElement.parentElement;
+        const scaleFactorWidth = imgElement.width
+        const scaleFactorHeight = imgElement.height
+
+        offset = 10
+        annotations.forEach(ann => {
+            const box = document.createElement('div');
+            box.className = 'bounding-box';
+            box.setAttribute('data-label', ann.label); // Use this attribute for color coding
+
+
+            // Calculate left position considering offset
+            let calculatedLeft = (ann.coordinates.x * scaleFactorWidth) - offset;
+            if (calculatedLeft < 0) {
+                calculatedLeft = 0;  // Ensures that left position is not negative
+            }
+
+            // Calculate left position considering offset
+            let calculatedTop = (ann.coordinates.y * scaleFactorHeight) - offset;
+            if (calculatedTop < 0) {
+                calculatedTop = 0;  // Ensures that left position is not negative
+            }
+
+            // Calculate left position considering offset
+            let calculatedWidth = (ann.coordinates.width * scaleFactorWidth) + 2 * offset;
+            if (calculatedLeft + calculatedWidth > scaleFactorWidth) {
+                calculatedWidth = ann.coordinates.width;  // Ensures that left position is not negative
+            }
+
+            // Calculate left position considering offset
+            let calculatedHeight = (ann.coordinates.height * scaleFactorHeight) + 2 * offset;
+            if (calculatedTop + calculatedHeight > scaleFactorHeight) {
+                calculatedLeft = ann.coordinates.height;  // Ensures that left position is not negative
+            }
+
+            box.style.left = calculatedLeft + 'px';
+            box.style.top = calculatedTop + 'px';
+            box.style.width = calculatedWidth + 'px';
+            box.style.height = calculatedHeight + 'px';
+            
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.textContent = `${ann.label}: ${ann.description || 'No additional info'}`;
+            box.appendChild(tooltip);
+            
+            const label = document.createElement('div');
+            label.className = 'label-above';
+            label.textContent = ann.label;
+            box.appendChild(label);
+
+            container.appendChild(box);
+            
+            // Optional: Add a click event to the bounding box
+            box.onclick = function() {
+                alert(`Clicked on ${ann.label}`);
+            };
+        });
+    }
+
+
+    function applyFilters() {
+        const date = document.getElementById('dateFilter').value;
+        const cls = document.getElementById('classFilter').value;
+        const images = document.querySelectorAll('#images > div');
+
+        images.forEach(img => {
+            const matchesDate = date === '' || img.dataset.date === date;
+            const imageClasses = JSON.parse(img.dataset.classes);
+            const matchesClass = cls === '' || imageClasses.includes(cls);
+            img.style.display = (matchesDate && matchesClass) ? 'block' : 'none';
+        });
+    }
+
+    function deleteImage(col, imgId) {
+        // Example: Delete the image from the display
+        col.parentNode.removeChild(col);
+        // Optionally, send a request to the server to delete the image from the database
+        fetch(`/api/delete_image/${imgId}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => console.log('Image deleted:', data))
+        .catch(error => console.error('Error deleting image:', error));
+    }
+    
+    
+    </script>
+
+<style>
+    #images img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+
+</body>
+</html>
