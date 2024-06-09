@@ -1,4 +1,4 @@
-# computer_vision_ops
+# Computer Vision Pps
 MLOps for computer vision
 
 
