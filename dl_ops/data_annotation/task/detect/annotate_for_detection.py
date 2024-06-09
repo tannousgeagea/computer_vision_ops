@@ -6,13 +6,13 @@ from utils.convertor import xyxy2xywh
 from utils.convertor import poly2xyxy
 from utils.common import get_label_path
 from utils.common import extract_annotation, write_result
+from data_annotation.utils.common import extract_annotation
 from utils.config import (
     Annotation, project, out, tasks
 )
 
 
 annotation_group = project.annotation_group
-
 
 def annotate(image, items):
 

@@ -2,7 +2,7 @@ import os
 import logging
 import numpy as np
 from tqdm import tqdm
-from utils.common import extract_annotation
+from data_annotation.utils.common import extract_annotation
 from utils.common import get_label_path
 from utils.config import (
     Annotation, project, out, tasks

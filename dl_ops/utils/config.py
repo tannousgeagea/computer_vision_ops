@@ -24,3 +24,14 @@ data_acquisition_mode = configuration.get('data-acquisition-mode')
 data_annotation_mode = configuration.get('data-annotation-mode')
 data_splitting_mode = configuration.get('data-splitting-mode')
 tasks = ['detect', 'segment', 'classify']
+
+def map_class_id(severity_level, ack_status):
+    class_ids = {
+        '0': 'background',
+        '1': 0,
+        '2': 0,
+        '3': 0,
+    }
+    index = str(severity_level) if ack_status>0 else str(ack_status)
+    
+    return class_ids[index]
