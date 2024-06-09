@@ -5,7 +5,7 @@ import numpy as np
 from tqdm import tqdm
 from utils.config import Image, Annotation, edge_box, project
 from utils.date_utils import now_str
-from data_splitting.utils.tools import split, get_metadata
+from data_splitting.utils.common import split, get_metadata
 
 
 def train_val_split():

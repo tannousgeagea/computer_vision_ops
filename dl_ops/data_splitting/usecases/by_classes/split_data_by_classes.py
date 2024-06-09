@@ -2,7 +2,7 @@ import os
 import random
 import numpy as np
 from tqdm import tqdm
-from data_splitting.utils.tools import split, get_metadata
+from data_splitting.utils.common import split, get_metadata
 from utils.config import Annotation, Image, project
 
 
